@@ -1,0 +1,67 @@
+(int) [ciaranfinn] (master) ~/code/genscape_test $ docker pull mongo
+(int) [ciaranfinn] (master) ~/code/genscape_test $ docker run -d -p 27017-27019:27017-27019 --name mongodb mongo
+
+(int) [ciaranfinn] (master) ~/code/genscape_test $ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                  NAMES
+1145d0d93aa3        mongo               "docker-entrypoint.s…"   15 seconds ago      Up 9 seconds        0.0.0.0:27017-27019->27017-27019/tcp   mongodb
+
+we got a mongo instance.
+
+port mapping included to let me access it from my host machine.
+
+opening a shell
+
+(int) [ciaranfinn] (master) ~/code/genscape_test $ docker exec -it mongodb bash
+
+root@1145d0d93aa3:/# mongo
+MongoDB shell version v4.2.0
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("92912cbf-0ee3-41b6-9883-065585595a08") }
+MongoDB server version: 4.2.0
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+	http://docs.mongodb.org/
+Questions? Try the support group
+	http://groups.google.com/group/mongodb-user
+Server has startup warnings:
+2019-09-02T10:43:25.599+0000 I  STORAGE  [initandlisten]
+2019-09-02T10:43:25.599+0000 I  STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2019-09-02T10:43:25.599+0000 I  STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2019-09-02T10:43:26.658+0000 I  CONTROL  [initandlisten]
+2019-09-02T10:43:26.658+0000 I  CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2019-09-02T10:43:26.658+0000 I  CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2019-09-02T10:43:26.659+0000 I  CONTROL  [initandlisten]
+---
+Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+and anyone you share the URL with. MongoDB may use this information to make product
+improvements and to suggest MongoDB products and deployment options to you.
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
+To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+
+
+Simple output:
+> show dbs
+admin   0.000GB
+config  0.000GB
+data    0.000GB
+finn    0.000GB
+local   0.000GB
+> use data
+switched to db data
+> show collections
+sensor_temps
+> db.sensor_temps.find()
+{ "_id" : ObjectId("5d6cf9abd4df4d7e78f60b96"), "id" : "GLOBALLY_UNIQUE_IDENTIFIER", "type" : "Sensor", "content" : { "time_of_measurement" : "2019-09-02T11:14:51.803575", "temperature_c" : 67.77777777777779 } }
+{ "_id" : ObjectId("5d6cf9b0d4df4d7e78f60b97"), "id" : "GLOBALLY_UNIQUE_IDENTIFIER", "type" : "Sensor", "content" : { "time_of_measurement" : "2019-09-02T11:14:56.815178", "temperature_c" : -276.11111111111114 } }
+{ "_id" : ObjectId("5d6cf9b5d4df4d7e78f60b98"), "id" : "GLOBALLY_UNIQUE_IDENTIFIER", "type" : "Sensor", "content" : { "time_of_measurement" : "2019-09-02T11:15:01.826418", "temperature_c" : -14.444444444444445 } }
+{ "_id" : ObjectId("5d6cf9bad4df4d7e78f60b99"), "id" : "GLOBALLY_UNIQUE_IDENTIFIER", "type" : "Sensor", "content" : { "time_of_measurement" : "2019-09-02T11:15:06.839506", "temperature_c" : 111.11111111111111 } }
+{ "_id" : ObjectId("5d6cf9bfd4df4d7e78f60b9a"), "id" : "GLOBALLY_UNIQUE_IDENTIFIER", "type" : "Sensor", "content" : { "time_of_measurement" : "2019-09-02T11:15:11.849171", "temperature_c" : 60 } }
+{ "_id" : ObjectId("5d6cf9c4d4df4d7e78f60b9b"), "id" : "GLOBALLY_UNIQUE_IDENTIFIER", "type" : "Sensor", "content" : { "time_of_measurement" : "2019-09-02T11:15:16.860297", "temperature_c" : -37.77777777777778 } }
+
+

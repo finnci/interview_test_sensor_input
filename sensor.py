@@ -5,6 +5,7 @@ import time
 import queue
 import threading
 
+from pymongo import MongoClient
 
 def get_new_data():
     '''
@@ -62,14 +63,17 @@ def get_from_queue(q):
    return q.get()
 
 
-def write_to_db(data):
+def write_to_db(data, collection):
     '''
     dunno what to do yet
     '''
-    print("muh data for a db {}".format(data))
+    try:
+        collection.insert_one(data)
+    except Exception as e:
+        logging.exception("failed to insert data")
 
 
-def run_data_writer(q):
+def run_data_writer(q, collection):
     while True:
         try:
             data = get_from_queue(q)
@@ -78,13 +82,22 @@ def run_data_writer(q):
             continue
         else:
             # we have data, lets write it
-            write_to_db(data)
+            write_to_db(data, collection)
 
 
 def run_the_data():
+    '''
+
+    '''
+    # just using stock settings for the mongo db setup.
+    mongo_client = MongoClient('localhost', 27017)
+    db = mongo_client['data']
+    collection = db.sensor_temps
+    # basic queue, need to know more about the type of
+    # data/machine to configure a different type of queue.
     new_q = queue.Queue()
     get_and_process_t = threading.Thread(target=run_data_getter, args=(new_q,))
-    write_to_db_t = threading.Thread(target=run_data_writer, args=(new_q,))
+    write_to_db_t = threading.Thread(target=run_data_writer, args=(new_q, collection))
     get_and_process_t.start()
     write_to_db_t.start()
     while True:
