@@ -77,3 +77,4 @@ To be improved
 1. Logging/monitoring - it would be easy to get a good overview of whats going on with some simple counts of when we add or remove from the queue
 2. testing - it only covers the actual data processing, adding testing for mongo client and the rest of the pipeline would be ideal.
 3. configuration for clients/timeouts/dbs should be passed in via some externally managed config file.
+4. before going anywhere near real data, the DB should be secured with username&pass at the very least.
