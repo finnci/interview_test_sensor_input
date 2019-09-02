@@ -47,7 +47,7 @@ Unknowns
 
 Results:
 =======
-See docker_for_mongo.txt for write up of the DB and sample output.
+See [here](docker_for_mongo.txt) for write up of the DB and sample output.
 
 
 
