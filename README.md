@@ -45,4 +45,7 @@ Unknowns
 2. what sort of queries get run on the data and how long the data needs to exist for, this would have a massive impact on what DB is chosen. it would be very easy to pump the data into a locally running redis, which is grand for short term easy to query data, if we wanted long term i might have considered something like this - https://www.timescale.com/
  , however for this i decided to aim the data at a mongodb instance.
 
+Results:
+=======
+See docker_for_mongo.txt for write up of the DB and sample output.
 
