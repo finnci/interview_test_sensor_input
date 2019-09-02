@@ -25,6 +25,10 @@ def get_new_data():
 
 
 def process_data(data):
+    '''
+    Data has a temp stored in farenheight,
+    we need to convert it to celcius.
+    '''
     try:
         temp_f = data['content']['temperature_f']
     except KeyError:
@@ -35,7 +39,7 @@ def process_data(data):
     # (temp_f°F − 32) × 5/9 = temp_c°C
     # 5/9 = 0.5555555555555556
     temp_c = (temp_f - 32) * (0.5555555555555556)
-
+    # not sure if we need temp_f, gonna delete it.
     del data['content']['temperature_f']
     data['content']['temperature_c'] = temp_c
     return data
@@ -60,12 +64,17 @@ def run_data_getter(q):
 
 
 def get_from_queue(q):
-   return q.get()
+    # get from q, simples.
+    return q.get()
 
 
 def write_to_db(data, collection):
     '''
-    dunno what to do yet
+    Given some data and a mongo collection
+    add the data using "insert one", if leading
+    edge of the data didn't matter, we should bulk
+    insert data rather than perform an insert
+    per line of data.
     '''
     try:
         collection.insert_one(data)
@@ -74,11 +83,15 @@ def write_to_db(data, collection):
 
 
 def run_data_writer(q, collection):
+    '''
+    Continuously pull data from the queue
+    pass it to the db writer func.
+    '''
     while True:
         try:
             data = get_from_queue(q)
         except queue.Empty:
-            # no data, thats grand
+            # no data, thats grand (probably)
             continue
         else:
             # we have data, lets write it
@@ -87,7 +100,11 @@ def run_data_writer(q, collection):
 
 def run_the_data():
     '''
-
+    Configures a mongo client
+    Configures a basic python Queue
+    Sets up 2 threads:
+    1. adds to the queue
+    2. pulls from the queue, and writes to the mongo DB.
     '''
     # just using stock settings for the mongo db setup.
     mongo_client = MongoClient('localhost', 27017)
@@ -96,18 +113,21 @@ def run_the_data():
     # basic queue, need to know more about the type of
     # data/machine to configure a different type of queue.
     new_q = queue.Queue()
+    # config threads
     get_and_process_t = threading.Thread(target=run_data_getter, args=(new_q,))
     write_to_db_t = threading.Thread(target=run_data_writer, args=(new_q, collection))
+    # run dem threads.
     get_and_process_t.start()
     write_to_db_t.start()
     while True:
         qsize = new_q.qsize()
         if qsize != 0:
+            # in reality i might send
+            # some sort of heartbeat metric or signal
+            # which would record qsize to try monitor
+            # for queue backlogs
             print("q has data")
-
 
 
 if __name__ == '__main__':
     run_the_data()
-
-
