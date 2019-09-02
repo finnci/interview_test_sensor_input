@@ -1,9 +1,7 @@
-# genscape_test
-
 
 Spec
 ====
-Genscape ingests thousands of sensor daily on a daily basis. The purpose of this test is to develop a
+$company ingests thousands of sensor daily on a daily basis. The purpose of this test is to develop a
 data pipeline that given a random generator of sensor data that generates data points in the
 following format:
 ```
