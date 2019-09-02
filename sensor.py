@@ -7,18 +7,20 @@ import threading
 
 from pymongo import MongoClient
 
+
 def get_new_data():
     '''
     Generates some sample sensor output
-    with a varying reading for farenheight. 
+    with a varying reading for farenheight.
     '''
-    new_f = random.randint(-500,500)
+    new_f = random.randint(-500, 500)
+    iso_now = datetime.datetime.utcnow().isoformat()
     sensor_data = {
         "id": "GLOBALLY_UNIQUE_IDENTIFIER",
         "type": "Sensor",
         "content": {
-            "temperature_f": new_f, # Temperature in Fahrenheit
-            "time_of_measurement": datetime.datetime.utcnow().isoformat() # Datetime in ISO format
+            "temperature_f": new_f,
+            "time_of_measurement": iso_now
         }
     }
     return sensor_data
@@ -115,7 +117,8 @@ def run_the_data():
     new_q = queue.Queue()
     # config threads
     get_and_process_t = threading.Thread(target=run_data_getter, args=(new_q,))
-    write_to_db_t = threading.Thread(target=run_data_writer, args=(new_q, collection))
+    write_to_db_t = threading.Thread(target=run_data_writer,
+                                     args=(new_q, collection))
     # run dem threads.
     get_and_process_t.start()
     write_to_db_t.start()
