@@ -55,7 +55,9 @@ Run me:
 =======
 
 Assuming mongoDB is running as described above.
+
 $ pip install -r requirements.txt
+
 $ python sensor.py
 
 
