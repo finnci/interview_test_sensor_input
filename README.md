@@ -49,3 +49,17 @@ Results:
 =======
 See docker_for_mongo.txt for write up of the DB and sample output.
 
+
+
+Run me:
+=======
+
+Assuming mongoDB is running as described above.
+$ pip install -r requirements.txt
+$ python sensor.py
+
+
+Test me:
+=======
+
+$ python test_sensor_stuff.py
